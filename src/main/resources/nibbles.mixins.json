@@ -4,8 +4,12 @@
   "package": "io.github.merchantpug.nibbles.mixin",
   "compatibilityLevel": "JAVA_16",
   "mixins": [
+    "BucketItemAccessor",
     "HungerManagerMixin",
-    "ItemStackMixin"
+    "ItemAccessor",
+    "ItemStackMixin",
+    "LivingEntityMixin",
+    "TemporaryPlayerEntityMixin"
   ],
   "client": [
   ],
