@@ -89,9 +89,7 @@ public abstract class ItemStackMixin implements ItemStackAccess {
                     this.nibbles_stackFoodComponent = null;
                 }
             } else {
-                if (this.nibbles_stackFoodComponentShouldBe != null) {
-                    this.nibbles_stackFoodComponent = this.nibbles_stackFoodComponentShouldBe;
-                }
+                this.nibbles_stackFoodComponent = this.nibbles_stackFoodComponentShouldBe;
             }
         }
     }
