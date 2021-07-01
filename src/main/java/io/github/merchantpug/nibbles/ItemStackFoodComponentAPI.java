@@ -20,4 +20,10 @@ public class ItemStackFoodComponentAPI {
             ((ItemStackAccess)(Object)stack).setEntityPredicate(entityPredicate);
         }
     }
+
+    public static void removeFoodComponent(Predicate<ItemStack> stackPredicate, ItemStack stack) {
+        if (stackPredicate.test(stack)) {
+            ((ItemStackAccess)(Object)stack).setItemStackFoodComponent(null);
+        }
+    }
 }
