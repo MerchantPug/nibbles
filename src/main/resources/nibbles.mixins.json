@@ -8,8 +8,7 @@
     "HungerManagerMixin",
     "ItemAccessor",
     "ItemStackMixin",
-    "LivingEntityMixin",
-    "TemporaryPlayerEntityMixin"
+    "LivingEntityMixin"
   ],
   "client": [
   ],
