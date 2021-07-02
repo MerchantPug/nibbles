@@ -8,22 +8,16 @@ import net.minecraft.item.ItemStack;
 import java.util.function.Predicate;
 
 public class ItemStackFoodComponentAPI {
-    public static void addFoodComponent(Predicate<ItemStack> stackPredicate, ItemStack stack, FoodComponent foodComponent) {
-        if (stackPredicate.test(stack)) {
-            ((ItemStackAccess)(Object)stack).setItemStackFoodComponent(foodComponent);
-        }
+    public static void addFoodComponent(ItemStack stack, FoodComponent foodComponent) {
+        ((ItemStackAccess)(Object)stack).setItemStackFoodComponent(foodComponent);
     }
 
-    public static void addFoodComponent(Predicate<ItemStack> stackPredicate, Predicate<LivingEntity> entityPredicate, ItemStack stack, FoodComponent foodComponent) {
-        if (stackPredicate.test(stack)) {
-            ((ItemStackAccess)(Object)stack).setItemStackFoodComponent(foodComponent);
-            ((ItemStackAccess)(Object)stack).setEntityPredicate(entityPredicate);
-        }
+    public static void addFoodComponent(Predicate<LivingEntity> entityPredicate, ItemStack stack, FoodComponent foodComponent) {
+        ((ItemStackAccess)(Object)stack).setItemStackFoodComponent(foodComponent);
+        ((ItemStackAccess)(Object)stack).setEntityPredicate(entityPredicate);
     }
 
-    public static void removeFoodComponent(Predicate<ItemStack> stackPredicate, ItemStack stack) {
-        if (stackPredicate.test(stack)) {
-            ((ItemStackAccess)(Object)stack).setItemStackFoodComponent(null);
-        }
+    public static void removeFoodComponent(ItemStack stack) {
+        ((ItemStackAccess)(Object)stack).setItemStackFoodComponent(null);
     }
 }
