@@ -1,13 +1,12 @@
 package io.github.merchantpug.nibbles.mixin;
 
-import io.github.merchantpug.nibbles.Nibbles;
+
 import io.github.merchantpug.nibbles.access.ItemStackAccess;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.*;
-import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.UseAction;
@@ -115,7 +114,7 @@ public abstract class ItemStackMixin implements ItemStackAccess {
 
     @Override
     public boolean isItemStackFood() {
-        return this.nibbles_stackFoodComponent != null;
+        return this.nibbles_stackFoodComponentShouldBe != null;
     }
 
     @Override
