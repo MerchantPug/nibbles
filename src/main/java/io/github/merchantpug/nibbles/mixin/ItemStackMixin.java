@@ -80,8 +80,8 @@ public abstract class ItemStackMixin implements ItemStackAccess {
 
     @Inject(method = "inventoryTick", at = @At("HEAD"), cancellable = true)
     private void inventoryTick(World world, Entity entity, int slot, boolean selected, CallbackInfo ci) {
-        if (this.getItem() != null && entity instanceof LivingEntity) {
-            if (!(nibbles_stackFoodComponent == nibbles_stackFoodComponentShouldBe)) {
+        if (!(nibbles_stackFoodComponent == nibbles_stackFoodComponentShouldBe)) {
+            if (this.getItem() != null && entity instanceof LivingEntity) {
                 if (nibbles_entityPredicate == null) {
                     this.nibbles_stackFoodComponent = this.nibbles_stackFoodComponentShouldBe;
                 } else {
