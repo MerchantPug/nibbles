@@ -1,13 +1,12 @@
 package io.github.merchantpug.nibbles.mixin;
 
-import io.github.merchantpug.nibbles.Nibbles;
+
 import io.github.merchantpug.nibbles.access.ItemStackAccess;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.*;
-import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.UseAction;
@@ -81,8 +80,8 @@ public abstract class ItemStackMixin implements ItemStackAccess {
 
     @Inject(method = "inventoryTick", at = @At("HEAD"), cancellable = true)
     private void inventoryTick(World world, Entity entity, int slot, boolean selected, CallbackInfo ci) {
-        if (this.getItem() != null && entity instanceof LivingEntity) {
-            if (!(nibbles_stackFoodComponent == nibbles_stackFoodComponentShouldBe)) {
+        if (this.getItem() != Items.AIR && entity instanceof LivingEntity) {
+            if (entity.age % 10 == 0) {
                 if (nibbles_entityPredicate == null) {
                     this.nibbles_stackFoodComponent = this.nibbles_stackFoodComponentShouldBe;
                 } else {
@@ -93,6 +92,13 @@ public abstract class ItemStackMixin implements ItemStackAccess {
                     }
                 }
             }
+        }
+    }
+
+    @Inject(method = "isFood", at = @At("HEAD"), cancellable = true)
+    private void isFood(CallbackInfoReturnable<Boolean> cir) {
+        if (this.isItemStackFood()) {
+            cir.setReturnValue(true);
         }
     }
 
