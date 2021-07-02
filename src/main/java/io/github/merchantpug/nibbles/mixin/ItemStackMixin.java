@@ -96,6 +96,13 @@ public abstract class ItemStackMixin implements ItemStackAccess {
         }
     }
 
+    @Inject(method = "isFood", at = @At("HEAD"), cancellable = true)
+    private void isFood(CallbackInfoReturnable<Boolean> cir) {
+        if (this.isItemStackFood()) {
+            cir.setReturnValue(true);
+        }
+    }
+
     @Override
     public FoodComponent getItemStackFoodComponent() {
         return this.nibbles_stackFoodComponent;
