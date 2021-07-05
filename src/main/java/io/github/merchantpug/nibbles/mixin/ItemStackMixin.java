@@ -19,10 +19,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
-import java.util.function.Predicate;
 
 @Mixin(ItemStack.class)
 public abstract class ItemStackMixin implements ItemStackAccess {
@@ -31,12 +28,6 @@ public abstract class ItemStackMixin implements ItemStackAccess {
 
     @Unique
     protected FoodComponent nibbles_stackFoodComponent;
-
-    @Unique
-    private FoodComponent nibbles_stackFoodComponentShouldBe;
-
-    @Unique
-    private Predicate<LivingEntity> nibbles_entityPredicate;
 
     @Inject(method = "use", at = @At("HEAD"), cancellable = true)
     private void use(World world, PlayerEntity user, Hand hand, CallbackInfoReturnable<TypedActionResult<ItemStack>> cir) {
@@ -78,23 +69,6 @@ public abstract class ItemStackMixin implements ItemStackAccess {
         }
     }
 
-    @Inject(method = "inventoryTick", at = @At("HEAD"), cancellable = true)
-    private void inventoryTick(World world, Entity entity, int slot, boolean selected, CallbackInfo ci) {
-        if (this.getItem() != Items.AIR && entity instanceof LivingEntity) {
-            if (entity.age % 10 == 0) {
-                if (nibbles_entityPredicate == null) {
-                    this.nibbles_stackFoodComponent = this.nibbles_stackFoodComponentShouldBe;
-                } else {
-                    if (this.nibbles_entityPredicate.test((LivingEntity)entity)) {
-                        this.nibbles_stackFoodComponent = this.nibbles_stackFoodComponentShouldBe;
-                    } else {
-                        this.nibbles_stackFoodComponent = null;
-                    }
-                }
-            }
-        }
-    }
-
     @Inject(method = "isFood", at = @At("HEAD"), cancellable = true)
     private void isFood(CallbackInfoReturnable<Boolean> cir) {
         if (this.isItemStackFood()) {
@@ -109,16 +83,11 @@ public abstract class ItemStackMixin implements ItemStackAccess {
 
     @Override
     public void setItemStackFoodComponent(FoodComponent stackFoodComponent) {
-        this.nibbles_stackFoodComponentShouldBe = stackFoodComponent;
+        this.nibbles_stackFoodComponent = stackFoodComponent;
     }
 
     @Override
     public boolean isItemStackFood() {
         return this.nibbles_stackFoodComponent != null;
-    }
-
-    @Override
-    public void setEntityPredicate(Predicate<LivingEntity> entityPredicate) {
-        this.nibbles_entityPredicate = entityPredicate;
     }
 }
