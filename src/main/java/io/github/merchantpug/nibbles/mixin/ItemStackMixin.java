@@ -1,12 +1,11 @@
 package io.github.merchantpug.nibbles.mixin;
 
-
 import io.github.merchantpug.nibbles.access.ItemStackAccess;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.*;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.UseAction;
@@ -21,6 +20,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.util.Objects;
+
 @Mixin(ItemStack.class)
 public abstract class ItemStackMixin implements ItemStackAccess {
 
@@ -28,6 +29,12 @@ public abstract class ItemStackMixin implements ItemStackAccess {
 
     @Unique
     protected FoodComponent nibbles_stackFoodComponent;
+    @Unique
+    protected UseAction nibbles_useAction;
+    @Unique
+    protected ItemStack nibbles_returnStack;
+    @Unique
+    protected SoundEvent nibbles_eatSound;
 
     @Inject(method = "use", at = @At("HEAD"), cancellable = true)
     private void use(World world, PlayerEntity user, Hand hand, CallbackInfoReturnable<TypedActionResult<ItemStack>> cir) {
@@ -51,14 +58,19 @@ public abstract class ItemStackMixin implements ItemStackAccess {
     @Inject(method = "finishUsing", at = @At("HEAD"), cancellable = true)
     private void finishUsing(World world, LivingEntity user, CallbackInfoReturnable<ItemStack> cir) {
         if (this.isItemStackFood()) {
-            cir.setReturnValue(user.eatFood(world, (ItemStack)(Object)this));
+            ItemStack itemStack = user.eatFood(world, (ItemStack)(Object)this);
+            if (this.getReturnStack() != null) {
+                cir.setReturnValue(user instanceof PlayerEntity && ((PlayerEntity)user).getAbilities().creativeMode ? itemStack : this.getReturnStack());
+            } else {
+                cir.setReturnValue(itemStack);
+            }
         }
     }
 
     @Inject(method = "getUseAction", at = @At("HEAD"), cancellable = true)
     private void getUseAction(CallbackInfoReturnable<UseAction> cir) {
         if (this.isItemStackFood()) {
-            cir.setReturnValue(UseAction.EAT);
+            cir.setReturnValue(Objects.requireNonNullElse(this.getFoodUseAction(), UseAction.EAT));
         }
     }
 
@@ -76,6 +88,20 @@ public abstract class ItemStackMixin implements ItemStackAccess {
         }
     }
 
+    @Inject(method = "getDrinkSound", at = @At("HEAD"), cancellable = true)
+    private void getDrinkSound(CallbackInfoReturnable<SoundEvent> cir) {
+        if (this.getStackEatSound() != null) {
+            cir.setReturnValue(this.getStackEatSound());
+        }
+    }
+
+    @Inject(method = "getEatSound", at = @At("HEAD"), cancellable = true)
+    private void getEatSound(CallbackInfoReturnable<SoundEvent> cir) {
+        if (this.getStackEatSound() != null) {
+            cir.setReturnValue(this.getStackEatSound());
+        }
+    }
+
     @Override
     public FoodComponent getItemStackFoodComponent() {
         return this.nibbles_stackFoodComponent;
@@ -89,5 +115,37 @@ public abstract class ItemStackMixin implements ItemStackAccess {
     @Override
     public boolean isItemStackFood() {
         return this.nibbles_stackFoodComponent != null;
+    }
+
+    @Override
+    public UseAction getFoodUseAction() {
+        return this.nibbles_useAction;
+    }
+
+    @Override
+    public void setFoodUseAction(UseAction useAction) {
+        if (useAction == UseAction.EAT || useAction == UseAction.DRINK) {
+            this.nibbles_useAction = useAction;
+        }
+    }
+
+    @Override
+    public ItemStack getReturnStack() {
+        return this.nibbles_returnStack;
+    }
+
+    @Override
+    public void setReturnStack(ItemStack stack) {
+        this.nibbles_returnStack = stack;
+    }
+
+    @Override
+    public SoundEvent getStackEatSound() {
+        return this.nibbles_eatSound;
+    }
+
+    @Override
+    public void setStackEatSound(SoundEvent sound) {
+        this.nibbles_eatSound = sound;
     }
 }
