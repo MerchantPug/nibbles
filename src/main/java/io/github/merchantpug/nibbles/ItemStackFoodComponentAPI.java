@@ -9,14 +9,14 @@ import org.jetbrains.annotations.Nullable;
 
 public class ItemStackFoodComponentAPI {
 
-    public static void removeNibbles(ItemStack stack) {
+    public static void removeStackFood(ItemStack stack) {
         ((ItemStackAccess)(Object)stack).setItemStackFoodComponent(null);
         ((ItemStackAccess)(Object)stack).setFoodUseAction(null);
         ((ItemStackAccess)(Object)stack).setReturnStack(null);
         ((ItemStackAccess)(Object)stack).setStackEatSound(null);
     }
 
-    public static void setNibbles(ItemStack stack, @Nullable FoodComponent component, @Nullable UseAction action, @Nullable ItemStack returnStack, @Nullable SoundEvent sound) {
+    public static void setStackFood(ItemStack stack, @Nullable FoodComponent component, @Nullable UseAction action, @Nullable ItemStack returnStack, @Nullable SoundEvent sound) {
         ((ItemStackAccess)(Object)stack).setItemStackFoodComponent(component);
         ((ItemStackAccess)(Object)stack).setFoodUseAction(action);
         ((ItemStackAccess)(Object)stack).setReturnStack(returnStack);

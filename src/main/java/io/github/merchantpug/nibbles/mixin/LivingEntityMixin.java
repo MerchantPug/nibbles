@@ -30,7 +30,7 @@ public abstract class LivingEntityMixin extends Entity  {
         super(type, world);
     }
 
-    @Inject(method = "applyFoodEffects", at = @At("HEAD"))
+    @Inject(method = "applyFoodEffects", at = @At("HEAD"), cancellable = true)
     private void applyFoodEffects(ItemStack stack, World world, LivingEntity targetEntity, CallbackInfo ci) {
         if (((ItemStackAccess)(Object)stack).isItemStackFood()) {
             List<Pair<StatusEffectInstance, Float>> list = ((ItemStackAccess)(Object)stack).getItemStackFoodComponent().getStatusEffects();
@@ -42,6 +42,7 @@ public abstract class LivingEntityMixin extends Entity  {
                     targetEntity.addStatusEffect(new StatusEffectInstance(pair.getFirst()));
                 }
             }
+            ci.cancel();
         }
     }
 }
